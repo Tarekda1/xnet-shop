@@ -10,8 +10,6 @@ interface AppBarProps {
 
 const AppBar: React.FC<AppBarProps> = () => {
   // Example user data
-  const userImageUrl = "path_to_user_avatar.png"; // Replace with actual user image URL
-  const userName = "John Doe"; // Replace with actual user name
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
 
@@ -22,6 +20,10 @@ const AppBar: React.FC<AppBarProps> = () => {
     },
     [signOut]
   );
+
+  React.useEffect(() => {
+    console.log(user);
+  }, [user]);
 
   const onSignInClick = useCallback(
     (e: any) => {
@@ -35,11 +37,13 @@ const AppBar: React.FC<AppBarProps> = () => {
   return (
     <header className="bg-blue-500 p-4 fixed w-full">
       <nav className="container mx-auto flex items-center justify-between">
-        <h1 className="text-white text-2xl font-semibold">My App</h1>
+        <h1 className="font-extrabold text-transparent text-2xl bg-clip-text bg-gradient-to-r from-white to-pink-600">
+          Xnet Billing System
+        </h1>
         <div className="flex items-center space-x-4 ">
           {/* User Avatar */}
-          <Link to="/user">
-            <UserAvatar imageUrl={userImageUrl} altText={userName} />
+          <Link to={`/users/${user?.userId}`}>
+            <UserAvatar imageUrl={""} altText={user?.name || ""} />
           </Link>
 
           {/* Navigation Links */}
@@ -47,7 +51,9 @@ const AppBar: React.FC<AppBarProps> = () => {
             {/* Add more navigation links here */}
             {user?.accessToken ? (
               <li>
-                <button onClick={onSignOutClick}>Logout</button>
+                <button onClick={onSignOutClick}>
+                  Logout <i className="fa fa-sign-out"></i>
+                </button>
               </li>
             ) : (
               <li>

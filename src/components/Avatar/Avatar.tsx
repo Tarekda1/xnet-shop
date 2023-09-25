@@ -9,8 +9,11 @@ interface UserAvatarProps {
 const UserAvatar: React.FC<UserAvatarProps> = ({ imageUrl, altText }) => {
   return (
     <div className="flex items-center">
-      <img src={imageUrl} alt={altText} className="h-8 w-8 rounded-full mr-2" />
-      <span className="text-white">{altText}</span>
+      {/* <img src={imageUrl} alt={altText} className="h-8 w-8 rounded-full mr-2" /> */}
+      <div className="h-8 w-8 rounded-full mr-2 bg-white flex justify-center items-center">
+        <i className="fa fa-user"></i>
+      </div>
+      <span className="text-white underline">{altText}</span>
     </div>
   );
 };

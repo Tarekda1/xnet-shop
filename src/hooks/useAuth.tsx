@@ -40,6 +40,8 @@ export const useAuth = () => {
           userId: resp?.data.userId,
           accessToken: resp?.data?.accessToken,
           refreshToken: resp?.data?.refreshToken,
+          name: resp?.data?.name,
+          email: resp?.data?.email,
         })
       );
     } catch (err) {

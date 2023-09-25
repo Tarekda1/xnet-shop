@@ -14,7 +14,7 @@ const useProducts = () => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.accessToken}`,
+        Authorization: `Bearer ${user?.accessToken || ""}`,
       },
     }) // Replace with your actual API endpoint
       .then((response) => {
@@ -26,7 +26,7 @@ const useProducts = () => {
         console.error("Error fetching products:", error);
         setLoading(false);
       });
-  }, [user.accessToken]);
+  }, [user?.accessToken]);
 
   return { data: products, loading };
 };

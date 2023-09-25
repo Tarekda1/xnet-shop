@@ -1,15 +1,11 @@
 // src/components/ProductForm.tsx
 import React, { useMemo } from "react";
-import {
-  useForm,
-  useFieldArray,
-  useWatch,
-  Control,
-  Controller,
-} from "react-hook-form";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import useInventory from "../../hooks/useInventory";
 import { InventoryItem } from "../../entities/Inventory";
 import DropdownWithSearch from "../DropdownWithSearch/DropdownWithSearch";
+import useSalesOrder from "../../hooks/useSalesOrder";
+import placeholder from "../../assets/placeholder.png";
 
 interface CreateSalesOrderFormProps {
   onSubmit: () => void;
@@ -20,7 +16,9 @@ type FormValues = {
   cart: {
     productName: string;
     price: number;
+    salesPrice: number;
     quantity: number;
+    imageurl: string;
   }[];
 };
 
@@ -34,7 +32,9 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
     getValues,
   } = useForm<FormValues>({
     defaultValues: {
-      cart: [{ productName: "test", quantity: 1, price: 23 }],
+      cart: [
+        { productName: "", quantity: 0, price: 0, salesPrice: 0, imageurl: "" },
+      ],
     },
     mode: "onBlur",
   });
@@ -42,9 +42,17 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
     name: "cart",
     control,
   });
-  const onSubmit = (data: FormValues) => console.log(data);
+  const onSubmit = (data: FormValues) => {
+    const postedData = {
+      customer: data.customerName,
+      items: data.cart,
+    };
+    postSalesCb(postedData);
+    console.log(postedData);
+  };
 
   const { data } = useInventory();
+  const { postSalesCb } = useSalesOrder();
 
   const mappedData = useMemo(() => {
     return data.map((d: InventoryItem) => {
@@ -64,7 +72,7 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
           <input
             type="text"
             id="customerName"
-            defaultValue={"shop customer name"}
+            defaultValue={"New customer"}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
             {...register("customerName")}
           />
@@ -75,6 +83,21 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
         {fields.map((field, index) => {
           return (
             <div className="flex flex-row items-center gap-1">
+              <div className="p-2 pl-0">
+                {getValues(`cart.${index}.imageurl` as const) === "" ? (
+                  <img
+                    src={placeholder}
+                    className="object-contain h-14 w-14"
+                    alt="product placeholder"
+                  />
+                ) : (
+                  <img
+                    src={getValues(`cart.${index}.imageurl` as const)}
+                    className="object-contain h-14 w-14"
+                    alt="product"
+                  />
+                )}
+              </div>
               <div className="mb-4 flex-1">
                 <label
                   htmlFor="price"
@@ -85,6 +108,9 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
                 <Controller
                   name={`cart.${index}.productName`}
                   control={control}
+                  rules={{
+                    required: true,
+                  }}
                   render={({ field }) => (
                     <DropdownWithSearch
                       data={mappedData}
@@ -104,6 +130,13 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
                             shouldValidate: true,
                           }
                         );
+                        setValue(
+                          `cart.${index}.imageurl` as const,
+                          invtItem[0]?.product?.image || "",
+                          {
+                            shouldValidate: true,
+                          }
+                        );
                       }}
                     />
                   )}
@@ -119,14 +152,49 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
                 <input
                   type="number"
                   id="price"
+                  disabled
                   value={getValues(`cart.${index}.price` as const)}
                   className="mt-1 p-2 border border-gray-300 rounded w-full"
-                  {...(register(`cart.${index}.price` as const),
+                  {...(register(`cart.${index}.price` as const, {
+                    validate: {
+                      greateThanZero: (v) => {
+                        return v > 0;
+                      },
+                    },
+                  }),
                   { required: true })}
                 />
                 {errors?.cart?.[index]?.price && (
                   <p className="text-red-500">
                     Price is required and must be greater than 0
+                  </p>
+                )}
+              </div>
+              <div className="mb-4 flex-1">
+                <label
+                  htmlFor="sellingprice"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Selling price
+                </label>
+                <input
+                  type="number"
+                  id="sellingprice"
+                  className="mt-1 p-2 border border-gray-300 rounded w-full"
+                  {...register(`cart.${index}.salesPrice` as const, {
+                    validate: {
+                      greateThanPrice: (v) => {
+                        console.log(v);
+                        // const value = v.cart?.[index].price;
+                        return v >= getValues(`cart.${index}.price` as const);
+                      },
+                    },
+                  })}
+                />
+                {errors?.cart?.[index]?.salesPrice && (
+                  <p className="text-red-500">
+                    Selling Price is required and must be greater than cost
+                    price
                   </p>
                 )}
               </div>
@@ -143,6 +211,7 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
                   className="mt-1 p-2 border border-gray-300 rounded w-full"
                   {...register(`cart.${index}.quantity` as const, {
                     required: true,
+                    min: 1,
                   })}
                 />
                 {errors?.cart?.[index]?.quantity && (
@@ -157,7 +226,7 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
                   className="mt-2 px-4 py-2 bg-red-300  text-white rounded hover:bg-blue-600"
                   onClick={() => remove(index)}
                 >
-                  Remove
+                  <i className="fa fa-trash" />
                 </button>
               </div>
             </div>
@@ -171,17 +240,19 @@ const CreateSalesOrderFormUpdated: React.FC<CreateSalesOrderFormProps> = () => {
               productName: "",
               quantity: 0,
               price: 0,
+              salesPrice: 0,
+              imageurl: "",
             })
           }
         >
-          Add items to order
+          <i className="fa fa-plus"></i> Add more
         </button>
         <div className="mb-4 flex justify-end">
           <button
             type="submit"
             className="px-4 py-2 bg-blue-500  text-white rounded hover:bg-blue-600"
           >
-            Create Order
+            <i className="fa fa-save"></i> Save
           </button>
         </div>
       </form>

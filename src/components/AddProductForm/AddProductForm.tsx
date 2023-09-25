@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import ProductForm from "../ProductForm/ProductForm";
 import useAddProduct from "../../hooks/useAddProduct";
 import { PostedProduct } from "../../entities/Product";
+import addproduct from "../../assets/addproduct.png";
 
 const AddProductForm: React.FC = () => {
   const navigate = useNavigate();
@@ -32,7 +33,12 @@ const AddProductForm: React.FC = () => {
 
   return (
     <div className="container mx-auto mt-2">
-      <h1 className="text-3xl font-semibold mb-4">Add New Product</h1>
+      <h1 className="text-3xl font-semibold mb-4">
+        <div className="flex">
+          <img src={addproduct} alt="add product" />
+          Add New Product
+        </div>
+      </h1>
       <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl">
         <ProductForm control={control} register={register} />
         <div className="text-right">

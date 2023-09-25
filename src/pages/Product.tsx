@@ -5,24 +5,6 @@ import useProductSearch from "../hooks/useProductSearch";
 import useProductSort from "../hooks/useProductSort";
 import useProducts from "../hooks/useProducts";
 
-const initialProducts = [
-  {
-    id: 1,
-    name: "Product 1",
-    description: "Description for Product 1",
-    price: 49.99,
-    imageUrl: "https://via.placeholder.com/150",
-  },
-  {
-    id: 2,
-    name: "Product 2",
-    description: "Description for Product 2",
-    price: 29.99,
-    imageUrl: "https://via.placeholder.com/150",
-  },
-  // Add more products to the array as needed
-];
-
 const ProductPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
