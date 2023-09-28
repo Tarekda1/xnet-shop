@@ -34,12 +34,14 @@ const AddProductForm: React.FC = () => {
   return (
     <div className="container mx-auto mt-2">
       <h1 className="text-3xl font-semibold mb-4">
-        <div className="flex">
-          <img src={addproduct} alt="add product" />
-          Add New Product
+        <div className="flex justify-center">
+          <div>
+            <img src={addproduct} alt="add product" />
+            Add New Product
+          </div>
         </div>
       </h1>
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-4xl">
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-7xl">
         <ProductForm control={control} register={register} />
         <div className="text-right">
           <button

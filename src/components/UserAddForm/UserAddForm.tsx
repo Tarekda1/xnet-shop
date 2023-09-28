@@ -23,74 +23,79 @@ const UserAddForm: React.FC = () => {
       <h1 className="text-2xl font-bold mb-4">Add User</h1>
       <div className="card rounded-none">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              value={user.username}
-              onChange={handleInputChange}
-              className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
-            />
+          <div className="flex gap-2">
+            <div className="flex flex-1 flex-col">
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={user.username}
+                onChange={handleInputChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
+              />
+            </div>
+            <div className="flex flex-1 flex-col">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Password
+              </label>
+              <input
+                type="text"
+                id="password"
+                name="password"
+                value={user.password}
+                onChange={handleInputChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Password
-            </label>
-            <input
-              type="text"
-              id="password"
-              name="password"
-              value={user.password}
-              onChange={handleInputChange}
-              className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
-            />
+          <div className="flex gap-2">
+            <div className="flex flex-1 flex-col">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                value={user.password}
+                onChange={handleInputChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
+              />
+            </div>
+            <div className="flex flex-1 flex-col">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Email
+              </label>
+              <input
+                type="text"
+                id="email"
+                name="email"
+                value={user.email}
+                onChange={handleInputChange}
+                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                required
+              />
+            </div>
           </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={user.password}
-              onChange={handleInputChange}
-              className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Email
-            </label>
-            <input
-              type="text"
-              id="email"
-              name="email"
-              value={user.email}
-              onChange={handleInputChange}
-              className="mt-1 p-2 border border-gray-300 rounded w-full"
-              required
-            />
-          </div>
+
           <div className="mt-4 text-end">
             <button
               type="submit"
