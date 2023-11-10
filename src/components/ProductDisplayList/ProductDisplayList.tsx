@@ -8,11 +8,13 @@ import { useNavigate } from "react-router-dom";
 interface ProductDisplayProps {
   products: Product[]; // Use an array of products
   loading?: boolean;
+  onDeleteCb: (product: Product) => void;
 }
 
 const ProductDisplayList: React.FC<ProductDisplayProps> = ({
   products,
   loading,
+  onDeleteCb
 }) => {
   const navigate = useNavigate();
   const handleProductClick = useCallback(
@@ -24,8 +26,7 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
 
   return (
     <>
-      <h3 className="text-3xl text-left mt-4 mb-4">Products</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-5 mt-4 transition-transform">
         {loading ? (
           <span>loading</span>
         ) : (
@@ -41,16 +42,24 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-fit"
                 />
               </div>
               <div className="p-4">
                 {/* Add a Font Awesome icon for the product */}
                 <h2 className="text-xl font-semibold">{product.name}</h2>
                 <p className="text-gray-500">{product.description}</p>
-                <p className="text-blue-600 mt-2">
-                  ${product.price.toFixed(2)}
-                </p>
+                <div className="flex justify-between">
+                  <p className="text-blue-600 mt-2">
+                    ${product.price?.toFixed(2)}
+                  </p>
+                  <button className="btn btn-primary w-4 text-xl text-right float-right" onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onDeleteCb(product)
+                  }}>
+                    <i className="fa fa-trash text-red-500"></i></button>
+                </div>
               </div>
             </div>
           ))

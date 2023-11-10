@@ -54,7 +54,7 @@ const sidebarData: SidebarItem[] = [
     label: "Users",
     icon: "fa fa-user",
     subitems: [
-      { label: "Add User", icon: "fa fa-shopping-cart", to: "/signup" },
+      { label: "Add User", icon: "fa fa-shopping-cart", to: "/users/add" },
       { label: "Users", icon: "fa fa-shopping-cart", to: "/users" },
     ],
   },
@@ -62,8 +62,8 @@ const sidebarData: SidebarItem[] = [
     label: "Products",
     icon: "fa fa-gift",
     subitems: [
-      { label: "Add Product", icon: "fa fa-shopping-cart", to: "/addproduct" },
-      { label: "Products", icon: "fa fa-shopping-cart", to: "/products" },
+      { label: "Add Product", icon: "fa fa-shopping-cart", to: "/products/add" },
+      { label: "Products", icon: "fa fa-shopping-cart", to: "/products/list" },
     ],
   },
   {
@@ -105,8 +105,11 @@ const Page: FC<BaseProps> = ({ children }) => {
         {/* <Sidebar menuItems={menuItems} /> */}
         <Sidebar items={sidebarData} />
         {/* Page content */}
-        <div className="ml-[16rem] p-4 flex-1 overflow-y-auto bg-gray-100">
+        <div className="ml-[16rem] p-4 flex-1 overflow-y-auto bg-gray-100 relative">
           {children}
+          <div className="footer absolute left-0 bottom-0 w-full bg-gray-600 text-white text-sm p-1 pl-2 justify-center text-left items-center my-auto">
+             Copyright @ {new Date().getFullYear()} Xnet billing
+          </div>
         </div>
       </div>
     </div>

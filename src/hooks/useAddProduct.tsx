@@ -12,6 +12,8 @@ const useAddProduct = () => {
     formData.append("price", String(product?.price));
     formData.append("barcode", product?.barcode || uuidFromUuidV4());
     formData.append("description", product?.description);
+    formData.append("category", product?.category);
+    formData.append("supplier", product?.supplier);
     if (product.image !== undefined)
       formData.append("image", product.image[0] as File); // Append the image file
 

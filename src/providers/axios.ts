@@ -3,6 +3,7 @@ import axios, { AxiosInstance } from "axios";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { clearToken } from "../utils/storageUtils";
+import routes from "../routes/routes";
 
 // axios instance
 export const cancelTokenSource = axios.CancelToken.source();
@@ -27,10 +28,10 @@ const AxiosInterceptor: FC<BaseProps> = ({ children }) => {
       if (error.response.status === 401) {
         //redirect logic here
         clearToken();
-        navigate("/login");
+        navigate(routes.login);
       }
-
-      return Promise.reject();
+      console.log(error.response)
+      return (error.response);
     };
 
     const interceptor = instance.interceptors.response.use(

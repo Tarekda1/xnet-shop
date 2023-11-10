@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoginForm from "../components/LoginForm/LoginForm";
 import { useAuth } from "../hooks/useAuth";
+import SignupForm from "../components/SignupForm/SignupForm";
 
-const LoginPage: React.FC = () => {
+const SignupPage: React.FC = () => {
   const navigate = useNavigate();
   const { signIn } = useAuth();
   const [username, setUsername] = useState("");
@@ -41,20 +42,14 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="bg-white p-8 rounded-lg shadow-md w-96">
-        <h2 className="text-2xl font-semibold mb-4">Login</h2>
-        <LoginForm
-          username={username}
-          password={password}
-          onUsernameChange={handleUsernameChange}
-          onPasswordChange={handlePasswordChange}
-          onSubmit={handleLoginSubmit}
+      <div className="bg-white p-8 rounded-lg shadow-md w-full m-4">
+        <h2 className="text-2xl font-semibold mb-4 text-center">Create new account</h2>
+        <SignupForm
         />
-        <div><p className="text-sm mt-1 flex flex-row">
-          To create a new account </p>
-          <button onClick={(e) => { e.preventDefault(); navigate("/auth/signup") }} className="text-xs text-blue-400">
-            Click here
-          </button>
+        <div className="flex">
+            <button onClick={()=>navigate("/auth/login")} className="mt-2 text-blue-400 text-sm underline">
+                back to login
+            </button>
         </div>
         {error ? <p className="text-sm  text-red-500 mt-2">{error}</p> : ""}
       </div>
@@ -62,4 +57,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

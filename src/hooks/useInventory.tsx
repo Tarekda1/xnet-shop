@@ -8,6 +8,7 @@ const useInventory = () => {
   const [inventory, setInventory] = useState<InventoryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [postInventoryItem, inventoryDataSate] = useAxios();
+  const [deleteInventoryItem, inventoryDeleteDataState] = useAxios();
   const user = getToken();
 
   useEffect(() => {
@@ -41,7 +42,25 @@ const useInventory = () => {
     [postInventoryItem]
   );
 
-  return { data: inventory, loading, postInventoryItemCb, inventoryDataSate };
+  const delInventoryItemCb = useCallback(
+    (id: string) => {
+      try {
+        deleteInventoryItem({
+          url: `/inventory/${id}`,
+          method: "DELETE",
+        });
+
+      } catch (error) {
+        console.log(error);
+      }
+      setInventory((prev) => {
+        return prev.filter((item) => item._id !== id);
+      });
+    },
+    [deleteInventoryItem]
+  );
+
+  return { data: inventory, loading, postInventoryItemCb, inventoryDataSate, delInventoryItemCb };
 };
 
 export default useInventory;

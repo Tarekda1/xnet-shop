@@ -22,9 +22,11 @@ export const useAuth = () => {
     user = JSON.parse(localStorage.getItem("user") || "") as User;
   } catch (error) {}
 
-  const signIn = async (data: { username: any; password: any }) => {
+  const signIn = async (data: { username: any; password: any }) :Promise<any> => {
+    let resp:any;
+    console.log(data);
     try {
-      const resp = await axios({
+       resp = await axios({
         method: "POST",
         url: `/auth/login`,
         data: {
@@ -46,14 +48,52 @@ export const useAuth = () => {
       );
     } catch (err) {
       console.log(err);
+      resp = err;
       console.error(err);
     }
+    console.log(resp);
+    return resp;  
+  };
+
+  const signUp = async (data: { username: any; password: any ,name:any,email:any}) :Promise<any> => {
+    let resp:any;
+    console.log(data);
+    try {
+       resp = await axios({
+        method: "POST",
+        url: `/auth/signup`,
+        data: {
+          username: data.username,
+          password: data.password,
+          name:data.name,
+          email:data.email
+        },
+      });
+      console.log(resp);
+      console.log(resp?.headers?.jwttoken);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          userId: resp?.data.userId,
+          accessToken: resp?.data?.accessToken,
+          refreshToken: resp?.data?.refreshToken,
+          name: resp?.data?.name,
+          email: resp?.data?.email,
+        })
+      );
+    } catch (err) {
+      console.log(err);
+      resp = err;
+      console.error(err);
+    }
+    console.log(resp);
+    return resp;  
   };
 
   const signOut = () => {
     localStorage.setItem("user", "");
-    navigate("/login");
+    navigate("/auth/login");
   };
 
-  return { signIn, signOut, user };
+  return { signIn, signOut, user,signUp };
 };

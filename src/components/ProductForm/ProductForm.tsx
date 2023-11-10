@@ -1,13 +1,39 @@
 // src/components/ProductForm.tsx
 import React from "react";
 import { Controller } from "react-hook-form";
+import ImageUploadDrop from "../ImageUploadDropZone/ImageUploadDrop";
+import ImageUpload from "../ImageUpload/ImageUpload";
+import ImageUploadNewVersion from "../ImageUploadVersion2/ImageUploadNewVersion";
 
 interface ProductFormProps {
   control: any; // Replace with the appropriate type if possible
   register: any; // Replace with the appropriate type if possible
+  errors: any;
+  setValue: any;
 }
 
-const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
+const generateSerialNumber = (setValue: any) => {
+
+  'use strict';
+
+  var chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+
+    serialLength = 10,
+
+    randomSerial = "",
+
+    i,
+
+    randomNumber;
+
+  for (i = 0; i < serialLength; i = i + 1) {
+    randomNumber = Math.floor(Math.random() * chars.length);
+    randomSerial += chars.substring(randomNumber, randomNumber + 1);
+  }
+  setValue("barcode",randomSerial);
+}
+
+const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, setValue }) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-4 mb-2">
@@ -21,6 +47,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
           <Controller
             name="name"
             control={control}
+            rules={{
+              required: true
+            }}
             defaultValue={""}
             render={({ field }) => (
               <input
@@ -31,18 +60,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
               />
             )}
           />
+          {errors.name && <p className="text-red-500">This is required.</p>}
         </div>
         <div className="mb-4">
           <label
             className="block text-gray-700 text-sm font-bold mb-2"
             htmlFor="barcode"
           >
-            Barcode
+            Serial No
           </label>
           <Controller
             name="barcode"
             control={control}
             defaultValue={""}
+            rules={{
+              required: true
+            }}
             render={({ field }) => (
               <input
                 {...field}
@@ -52,6 +85,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
               />
             )}
           />
+          <button onClick={() => generateSerialNumber(setValue)}>Generate Serial</button>
+          {errors.barcode && <p className="text-red-500">This is required.</p>}
         </div>
         <div className="mb-4">
           <label
@@ -64,6 +99,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
             name="price"
             control={control}
             defaultValue={0}
+            rules={{
+              required: true,
+              validate: (value) => value > 0
+            }}
             render={({ field }) => (
               <input
                 {...field}
@@ -73,6 +112,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
               />
             )}
           />
+          {errors.price && <p className="text-red-500">This is required.</p>}
         </div>
         <div className="mb-4">
           <label
@@ -81,20 +121,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
           >
             Image URL
           </label>
-          <input type="file" {...register("image")} />
-          {/* <Controller
-            name="image"
-            control={control}
-            defaultValue={null}
-            render={({ field }) => (
-              <input
-                {...field}
-                type="file"
-                id="image"
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
-              />
-            )}
-          /> */}
+          {/* <input type="file" {...register("image")} /> */}
+          <ImageUpload register={register} Controller={Controller} control={control} errors={errors} setValue={setValue} />
         </div>
         <div className="mb-4">
           <label
@@ -106,7 +134,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
           <Controller
             name="category"
             control={control}
-            defaultValue=""
+            rules={{
+              required: true
+            }}
+            defaultValue="Electronics"
             render={({ field }) => (
               <input
                 {...field}
@@ -115,6 +146,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
               />
             )}
           />
+          {errors.category && <p className="text-red-500">This is required.</p>}
         </div>
         <div className="mb-4">
           <label
@@ -126,7 +158,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register }) => {
           <Controller
             name="supplier"
             control={control}
-            defaultValue=""
+            defaultValue="Xnet shop"
             render={({ field }) => (
               <input
                 {...field}

@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface SidebarProps {
   items: SidebarItem[];
@@ -13,6 +13,8 @@ export interface SidebarItem {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ items }) => {
+  const location = useLocation();
+  console.log(location);
   // Sample sidebar data with subitems
   const [expanded, setExpanded] = useState<boolean[]>(
     Array(items.length).fill(false)
@@ -31,6 +33,25 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
       element?.classList.toggle("max-h-screen");
     }
   };
+
+  const expand = (index: number, item: SidebarItem) => {
+    const updatedExpanded = [...expanded];
+    updatedExpanded[index] = !updatedExpanded[index];
+    setExpanded(updatedExpanded);
+    const element = document.querySelector(`.ul-${item.label}-${index}`); // Replace with the selector for your element
+    element?.classList.remove("max-h-0");
+    element?.classList.add("max-h-screen");
+  };
+
+
+  useEffect(() => {
+    if (location.pathname === "/signup" || location.pathname === "/users") {
+      const index = items.findIndex(item => item.label === "Users");
+      console.log(items);
+      const itemselected = items.filter(item => item.label === "Users")[0];
+      expand(index, itemselected);
+    }
+  }, [location])
 
   return (
     <div className="w-64 bg-gray-800 h-screen text-white p-2 fixed">
@@ -51,9 +72,8 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
                     {item.subitems && (
                       <span>
                         <i
-                          className={`fa fa-light fa-angle-right ${
-                            expanded[index] ? "rotate-90" : "rotate-0"
-                          }`}
+                          className={`fa fa-light fa-angle-right ${expanded[index] ? "rotate-90" : "rotate-0"
+                            }`}
                         ></i>
                       </span>
                     )}
@@ -62,7 +82,7 @@ const Sidebar: React.FC<SidebarProps> = ({ items }) => {
               </div>
               {item.subitems && (
                 <ul
-                  className={`ul-${item.label}-${index} max-h-0 overflow-hidden ml-4 border-l-2 pl-2 border-green-700 border-solid ease-in-out delay-100 duration-1000 transition-all`}
+                  className={`ul-${item.label}-${index} max-h-0 overflow-hidden ml-4 border-l-2 pl-2 border-green-700 border-solid ease-in-out duration-1000 transition-all`}
                 >
                   {item.subitems.map((subitem, subindex) => (
                     <li

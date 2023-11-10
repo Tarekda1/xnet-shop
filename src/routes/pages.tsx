@@ -44,3 +44,5 @@ export const NewSalesOrderPage = withSuspense(
 );
 
 export const LoginPage = withSuspense(lazy(() => import("../pages/Login")));
+
+export const RegisterPage = withSuspense(lazy(() => import("../pages/Signup")));

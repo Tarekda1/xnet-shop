@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
   username: string;
@@ -15,6 +16,7 @@ const LoginForm: React.FC<LoginFormProps> = ({
   onPasswordChange,
   onSubmit,
 }) => {
+  const navigate = useNavigate();
   return (
     <form onSubmit={onSubmit}>
       <div className="mb-4">

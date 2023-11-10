@@ -14,6 +14,7 @@ import {
   EditUserPage,
   SalesOrderPage,
   NewSalesOrderPage,
+  RegisterPage,
 } from "./pages";
 import Page from "../components/Page/Page";
 // import { AuthProvider } from "../context/AuthenticationContext";
@@ -34,6 +35,12 @@ const Router = () => {
                 <IndexPage />
               </Page>
             </PrivateRoute>
+          }
+        />
+        <Route
+          path={routes.signup}
+          element={
+            <RegisterPage/>
           }
         />
         <Route
@@ -97,7 +104,7 @@ const Router = () => {
           }
         />
         <Route
-          path={routes.signup}
+          path={routes.adduser}
           element={
             <PrivateRoute>
               <Page>
@@ -136,6 +143,7 @@ const Router = () => {
             </PrivateRoute>
           }
         />
+
         <Route path={routes.login} element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

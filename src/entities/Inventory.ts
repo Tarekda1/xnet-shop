@@ -1,5 +1,5 @@
 export interface InventoryItem {
-  _id?: string;
+  _id: string;
   quantity?: number;
   status?: number;
   sellingPrice?: number;

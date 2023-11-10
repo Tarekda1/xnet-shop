@@ -137,7 +137,7 @@ const ProductFormEditable: React.FC<ProductFormProps> = ({
                     Image
                   </label>
                   <img
-                    className="object-cover h-[16rem]"
+                    className="object-contain h-[16rem]"
                     src={product?.image}
                     alt={product?.name}
                   />

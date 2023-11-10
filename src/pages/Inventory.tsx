@@ -1,5 +1,5 @@
 // Usage of the ProductDisplay component
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 // import useProductSearch from "../hooks/useProductSearch";
 // import useProductSort from "../hooks/useProductSort";
 import useInventory from "../hooks/useInventory";
@@ -8,7 +8,7 @@ import InventoryDisplayList from "../components/InventoryDisplayList/InventoryDi
 const InventoryPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sortBy, setSortBy] = useState<string>("name");
-  const { data, loading } = useInventory();
+  const { data, loading ,delInventoryItemCb} = useInventory();
   // const [products, setProducts] = useState<any>();
   // const { filteredProducts, searchProducts } = useProductSearch({
   //   initialProducts: data,
@@ -34,6 +34,10 @@ const InventoryPage: React.FC = () => {
   //   const sorted = sortedProductsCb();
   //   setProducts(sorted);
   // }, [sortedProductsCb, setProducts]);
+
+  const onDelete=useCallback((id:string)=>{
+    delInventoryItemCb(id);
+  },[]);  
 
   return (
     <div className="container mx-auto mt-2">
@@ -74,7 +78,7 @@ const InventoryPage: React.FC = () => {
           </div>
         </div>
       </div>
-      <InventoryDisplayList loading={loading} inventory={data} />
+      <InventoryDisplayList loading={loading} onDeleteCb={onDelete} inventory={data} />
     </div>
   );
 };

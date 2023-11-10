@@ -1,6 +1,6 @@
 // src/components/Sidebar.tsx
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 interface MenuItem {
   title: string;
@@ -13,6 +13,11 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ menuItems }) => {
+  const location=useLocation();
+  console.log(location);
+  useEffect(() => {
+    console.log(location);
+  },[location]);
   return (
     <aside className="w-1/6 bg-gray-800 text-white">
       {/* Sidebar content */}

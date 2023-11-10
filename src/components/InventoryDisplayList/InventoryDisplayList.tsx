@@ -7,15 +7,25 @@ import { InventoryItem } from "../../entities/Inventory";
 interface InventoryDisplayProps {
   inventory: InventoryItem[]; // Use an array of products
   loading?: boolean;
+  onDeleteCb: (id: string) => any;
 }
 
 const InventoryDisplayList: React.FC<InventoryDisplayProps> = ({
   inventory,
   loading,
+  onDeleteCb
 }) => {
+
+  const onDeleteItem = (id: string) => {
+    onDeleteCb(id);
+  }
+
   return (
     <>
       <h3 className="text-3xl text-left mt-4 mb-4">Inventory</h3>
+      <div className="flex flex-shrink">
+        <p className="border rounded text-base border-gray-400 p-1 mt-1 mb-4">{inventory.length} items</p>
+      </div>
       <table className="min-w-full bg-white divide-y divide-gray-200">
         <thead className="bg-gray-50">
           <tr>
@@ -64,9 +74,9 @@ const InventoryDisplayList: React.FC<InventoryDisplayProps> = ({
             {inventory.map((inventoryItem: InventoryItem) => (
               <tr
                 key={inventoryItem._id}
-                className="shadow-md h-4 divide-x-2 divide-y-4 p-4 m-4"
+                className="h-4 divide-x-2 divide-y-4 p-4 border-spacing-2 border-y-4 border-x-1 rounded-tl-md rounded-bl-md"
               >
-                <td className="flex w-28 flex-1 h-28 mx-auto p-2">
+                <td className="flex w-20 flex-1 h-20 mx-auto p-1 rounded-tl-md rounded-bl-md">
                   <img
                     src={inventoryItem?.product?.image}
                     alt={inventoryItem.product?.name}
@@ -75,7 +85,7 @@ const InventoryDisplayList: React.FC<InventoryDisplayProps> = ({
                 </td>
                 <td className="p-4 ml-2">
                   {/* Add a Font Awesome icon for the product */}
-                  <h2 className="text-xl font-semibold">
+                  <h2 className="text-lg font-semibold">
                     {inventoryItem?.product?.name}
                   </h2>
                 </td>
@@ -98,6 +108,9 @@ const InventoryDisplayList: React.FC<InventoryDisplayProps> = ({
                   <p className="text-gray-500  ml-2">
                     {inventoryItem.sellingPrice || 0}
                   </p>
+                </td>
+                <td className="w-24 h-ful text-center rounded-tr-md rounded-br-md">
+                  <button onClick={() => onDeleteItem(inventoryItem._id)}> <i className="fa fa-trash text-red-400 text-2xl"></i></button>
                 </td>
               </tr>
             ))}

@@ -1,5 +1,5 @@
 // src/components/AddProductForm.tsx
-import React from "react";
+import React, { useCallback } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { PostedProduct } from "../../entities/Product";
 import ProductFormEditable from "../ProductFormEditable/ProductFormEditable";
@@ -15,6 +15,10 @@ const EditProductForm: React.FC<EditProps> = ({ id }) => {
   const { handleSubmit, control, register } = useForm<PostedProduct>();
   const { handleEditProduct } = useEditProduct();
 
+  const onCancelCb = useCallback(() => {
+    navigate("/products/list");
+  }, []);
+
   const onSubmit: SubmitHandler<PostedProduct> = async (data) => {
     // Handle form submission, e.g., send data to a server
     try {
@@ -26,6 +30,8 @@ const EditProductForm: React.FC<EditProps> = ({ id }) => {
         price: data.price,
         image: data?.image,
         barcode: data.barcode,
+        supplier:data.supplier,
+        category: data.category
       };
       await handleEditProduct(product);
       navigate("/products");
@@ -46,6 +52,12 @@ const EditProductForm: React.FC<EditProps> = ({ id }) => {
           productId={id}
         />
         <div className="text-right">
+          <button
+            onClick={onCancelCb}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-2"
+          >
+            {"Cancel"}
+          </button>
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"

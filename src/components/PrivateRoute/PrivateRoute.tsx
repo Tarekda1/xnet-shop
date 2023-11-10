@@ -9,10 +9,10 @@ interface BaseProps {
 const PrivateRoute: FC<BaseProps> = ({ children }) => {
   const location = useLocation();
   const {
-    user: { accessToken },
+    user
   } = useAuthContext();
-  if (accessToken) {
-    return <Navigate to="/login" state={{ from: location.pathname }} />;
+  if (!user || !user?.accessToken) {
+    return <Navigate to="/auth/login" state={{ from: location.pathname }} />;
   }
   return children;
 };

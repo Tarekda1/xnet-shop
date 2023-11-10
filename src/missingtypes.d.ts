@@ -14,6 +14,8 @@ interface BlobPropertyBag {
   type?: string;
 }
 
+declare module 'react-camera';
+
 type EndingType = "transparent" | "native";
 
 type BlobPart = BufferSource | Blob | string;

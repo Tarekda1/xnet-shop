@@ -36,7 +36,7 @@ const AppBar: React.FC<AppBarProps> = () => {
 
   return (
     <header className="bg-blue-500 p-4 fixed w-full">
-      <nav className="container mx-auto flex items-center justify-between">
+      <nav className="w-full flex items-center justify-between">
         <h1 className="font-extrabold text-transparent text-2xl bg-clip-text bg-gradient-to-r from-white to-pink-600">
           Xnet Billing System
         </h1>
