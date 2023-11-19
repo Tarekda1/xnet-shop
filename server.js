@@ -9,7 +9,7 @@ app.use(compression());
 
 app.use("/static", express.static(process.env.ABSOLUTE_STATIC_PATH));
 
-app.get("/", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(process.env.ABSOLUTE_STATIC_PATH, "../index.html"));
 });
 
