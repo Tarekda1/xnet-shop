@@ -35,10 +35,10 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
               key={product._id}
               className="bg-white rounded-lg overflow-hidden 
               shadow-md cursor-pointer transition duration-100 
-              ease-out hover:ease-in  hover:-translate-y-1 hover:scale-105"
+              ease-out hover:ease-in  hover:-translate-y-1 hover:scale-105 h-full flex-col flex"
               onClick={() => handleProductClick(product)}
             >
-              <div className="flex w-full flex-1 h-48 mx-auto justify-center bg-white">
+              <div className="flex w-full flex-1 max-h-[15rem]  mx-auto justify-center bg-gray-200">
                 <img
                   src={product.image}
                   alt={product.name}
