@@ -14,7 +14,7 @@ interface ProductDisplayProps {
 const ProductDisplayList: React.FC<ProductDisplayProps> = ({
   products,
   loading,
-  onDeleteCb
+  onDeleteCb,
 }) => {
   const navigate = useNavigate();
   const handleProductClick = useCallback(
@@ -38,11 +38,11 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
               ease-out hover:ease-in  hover:-translate-y-1 hover:scale-105"
               onClick={() => handleProductClick(product)}
             >
-              <div className="flex w-full flex-1 h-48 mx-auto">
+              <div className="flex w-full flex-1 h-48 mx-auto justify-center bg-white">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-fit"
+                  className="w-full h-full object-contain"
                 />
               </div>
               <div className="p-4">
@@ -53,12 +53,16 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
                   <p className="text-blue-600 mt-2">
                     ${product.price?.toFixed(2)}
                   </p>
-                  <button className="btn btn-primary w-4 text-xl text-right float-right" onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    onDeleteCb(product)
-                  }}>
-                    <i className="fa fa-trash text-red-500"></i></button>
+                  <button
+                    className="btn btn-primary w-4 text-xl text-right float-right"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      onDeleteCb(product);
+                    }}
+                  >
+                    <i className="fa fa-trash text-red-500"></i>
+                  </button>
                 </div>
               </div>
             </div>
