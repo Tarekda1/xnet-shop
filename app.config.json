@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "react-app",
+      "script": "npx",
+      "args": "serve -s build -p 3000"
+    }
+  ]
+}

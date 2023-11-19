@@ -40,6 +40,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "start:prod": "serve build --single -p 4000",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
