@@ -17,7 +17,7 @@ const EditProductForm: React.FC<EditProps> = ({ id }) => {
 
   const onCancelCb = useCallback(() => {
     navigate("/products/list");
-  }, []);
+  }, [navigate]);
 
   const onSubmit: SubmitHandler<PostedProduct> = async (data) => {
     // Handle form submission, e.g., send data to a server
@@ -30,11 +30,11 @@ const EditProductForm: React.FC<EditProps> = ({ id }) => {
         price: data.price,
         image: data?.image,
         barcode: data.barcode,
-        supplier:data.supplier,
-        category: data.category
+        supplier: data.supplier,
+        category: data.category,
       };
       await handleEditProduct(product);
-      navigate("/products");
+      navigate("/products/list");
     } catch (error) {
       //show error message here
     }

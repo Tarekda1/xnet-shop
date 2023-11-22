@@ -5,16 +5,28 @@ import { Bar } from "react-chartjs-2";
 import MyChart from "./Chart/DataChat";
 import PieChart from "./PieChart/PieChart";
 import useAxios from "../hooks/useAxios";
+import { getToken } from "../utils/storageUtils";
 ChartJS.register(...registerables);
 
 const Dashboard: FC = () => {
-  const [getDateTimFromServer,dateTimeState]=useAxios();
-  useEffect(()=>{
+  const [getDateTimFromServer, dateTimeState] = useAxios();
+  const [getProductCount, productCountState] = useAxios();
+  const user = getToken();
+  useEffect(() => {
     getDateTimFromServer({
-      url:`/util/datetime`,
-      method:"GET"
+      url: `/util/datetime`,
+      method: "GET",
     });
-  },[]);
+    getProductCount({
+      url: `/products/productscount`,
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user?.accessToken || ""}`,
+      },
+    });
+  }, [getDateTimFromServer, getProductCount, user?.accessToken]);
+
   const data = {
     labels: ["Category A", "Category B", "Category C"],
     datasets: [
@@ -33,7 +45,11 @@ const Dashboard: FC = () => {
       <div className="grid grid-cols-4 gap-4 mb-2">
         {/* Grid Item 1 */}
         <div className="bg-white p-4 shadow-md">
-          <MyChart data={data} />
+          <h3 className="font-bold">Total products</h3>
+          <p>{productCountState.data?.totalProducts} items</p>
+          <div className="flex justify-center">
+            <i className="@apply !text-[10rem] fa fa-gift "></i>
+          </div>
         </div>
         <div className="bg-white p-4 shadow-md">
           <PieChart data={data} />
@@ -51,7 +67,11 @@ const Dashboard: FC = () => {
         <div className="bg-white p-4 shadow-md">
           <h3 className="text-lg font-semibold">System time</h3>
           <div className="flex justify-center">
-            {dateTimeState.loading ? "Loading" : <p className="text-9xl">{dateTimeState.data?.dateTime}</p>}
+            {dateTimeState.loading ? (
+              "Loading"
+            ) : (
+              <p className="text-9xl">{dateTimeState.data?.dateTime}</p>
+            )}
           </div>
         </div>
 
