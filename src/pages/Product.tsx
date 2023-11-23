@@ -13,7 +13,8 @@ const ProductPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<string>("name");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const { prodData, loading, deleteProduct, getProductsByPageSize } = useProducts();
+  const { prodData, loading, deleteProduct, getProductsByPageSize } =
+    useProducts();
   const [products, setProducts] = useState<any>();
   const { filteredProducts, searchProducts } = useProductSearch({
     initialProducts: prodData?.products || [],
@@ -31,13 +32,13 @@ const ProductPage: React.FC = () => {
   }, [prodData]);
 
   // Handler for searching products
-  const handleSearch = useCallback(async() => {
-    if(searchTerm==='') return;
-    const searchedResp:any = await searchProducts(searchTerm);
+  const handleSearch = useCallback(async () => {
+    if (searchTerm === "") return;
+    const searchedResp: any = await searchProducts(searchTerm);
     console.log(searchedResp);
     setProducts(searchedResp.products);
-     setPage(1);
-     setTotalPages(searchedResp.totalPages);
+    setPage(1);
+    setTotalPages(searchedResp.totalPages);
   }, [setProducts, searchProducts]);
 
   // Handler for sorting products
@@ -46,28 +47,37 @@ const ProductPage: React.FC = () => {
     setProducts(sorted);
   }, [sortedProductsCb, setProducts]);
 
-  const onDelete = useCallback(async (product: Product) => {
-    const resp = await deleteProduct(product);
-    console.log(resp);
-    if (resp.status === 204) {
-      console.log(products);
-      setProducts((prev: [Product]) => {
-        return prev.filter((param: Product) => param._id !== product._id);
-      })
-    }
-  }, [deleteProduct]);
+  const onDelete = useCallback(
+    async (product: Product) => {
+      const resp = await deleteProduct(product);
+      console.log(resp);
+      if (resp.status === 204) {
+        console.log(products);
+        setProducts((prev: [Product]) => {
+          return prev.filter((param: Product) => param._id !== product._id);
+        });
+      }
+    },
+    [deleteProduct, setProducts, products]
+  );
 
-  const onAddProduct = useCallback(async (e: any) => {
-    e.preventDefault();
-    navigate("/products/add")
-  }, []);
+  const onAddProduct = useCallback(
+    async (e: any) => {
+      e.preventDefault();
+      navigate("/products/add");
+    },
+    [navigate]
+  );
 
-  const onLoadMoreCb = useCallback(async (e: any) => {
-    e.preventDefault();
-    const pageParam = page + 1;
-    getProductsByPageSize(pageParam);
-    setPage((prev) => prev + 1);
-  }, [])
+  const onLoadMoreCb = useCallback(
+    async (e: any) => {
+      e.preventDefault();
+      const pageParam = page + 1;
+      getProductsByPageSize(pageParam);
+      setPage((prev) => prev + 1);
+    },
+    [getProductsByPageSize, setPage, page]
+  );
 
   return (
     <div className="container mx-auto mt-2">
@@ -111,36 +121,50 @@ const ProductPage: React.FC = () => {
               className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 ml-2"
               onClick={onAddProduct} // Call the sort handler
             >
-              <i className="fa fa-plus" />  Add product
+              <i className="fa fa-plus" /> Add product
             </button>
           </div>
         </div>
       </div>
-      {
-        products && products.length > 0 ?
-          <>
-            <div className=" flex flex-col justify-between flex-wrap items-start mt-4 mb-4">
-              <h3 className="text-4xl text-left">Products</h3>
-            </div>
-            <div className="flex">
-              <p className="text-small rounded p-1 border b-black">{products.length} items</p>
-            </div>
-            <ProductDisplayList onDeleteCb={onDelete} loading={loading} products={products} />
-            {prodData && (page < totalPages) ?
-              <div className="flex justify-center items-center w-full">
-                <button onClick={onLoadMoreCb} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-3 mb-2">
-                  {loading ? "loading..." : "View more"}
-                </button>
-              </div> : null
-            }
-          </> :
-          <div className="card flex justify-center flex-col align-center w-full">
-            <h1 className="text-2xl mt-2 mb-2">No Products Yet!</h1>
-            <button onClick={onAddProduct} className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600">Add new product</button>
+      {(products && products.length > 0) || loading ? (
+        <>
+          <div className=" flex flex-col justify-between flex-wrap items-start mt-4 mb-4">
+            <h3 className="text-4xl text-left">Products</h3>
           </div>
-
-      }
-
+          {!loading && (
+            <div className="flex">
+              <p className="text-small rounded p-1 border b-black">
+                {products?.length || 0} items
+              </p>
+            </div>
+          )}
+          <ProductDisplayList
+            onDeleteCb={onDelete}
+            loading={loading}
+            products={products}
+          />
+          {prodData && page < totalPages ? (
+            <div className="flex justify-center items-center w-full">
+              <button
+                onClick={onLoadMoreCb}
+                className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-3 mb-2"
+              >
+                {loading ? "loading..." : "View more"}
+              </button>
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <div className="card flex justify-center flex-col align-center w-full">
+          <h1 className="text-2xl mt-2 mb-2">No Products Yet!</h1>
+          <button
+            onClick={onAddProduct}
+            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
+          >
+            Add new product
+          </button>
+        </div>
+      )}
     </div>
   );
 };
