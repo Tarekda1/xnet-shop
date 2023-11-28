@@ -19,6 +19,10 @@ export const EditUserPage = withSuspense(
   lazy(() => import("../pages/EditUser"))
 );
 
+export const SearchProductsPage = withSuspense(
+  lazy(() => import("../pages/SearchProductsPage"))
+);
+
 export const ProductsPage = withSuspense(
   lazy(() => import("../pages/Product"))
 );

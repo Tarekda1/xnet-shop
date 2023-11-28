@@ -6,15 +6,14 @@ import useProductSort from "../hooks/useProductSort";
 import useProducts from "../hooks/useProducts";
 import { Product } from "../entities/Product";
 import { useLocation, useNavigate } from "react-router-dom";
+import SearchProductDisplayList from "../components/SearchProductDisplayList/ProductDisplayList";
 
-const ProductPage: React.FC = () => {
-  const navigate = useNavigate();
+const SearchProductsPage: React.FC = () => {
   const { search } = useLocation();
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string | null>("");
   const [sortBy, setSortBy] = useState<string>("name");
   const [page, setPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
-  const [category, setCategory] = useState<string | null>("");
   const { prodData, loading, deleteProduct, getProductsByPageSize } =
     useProducts();
   const [products, setProducts] = useState<any>();
@@ -36,24 +35,23 @@ const ProductPage: React.FC = () => {
   useEffect(() => {
     const searchParams = new URLSearchParams(document.location.search);
     if (searchParams !== null) {
-      setCategory(searchParams.get("category"));
+      setSearchTerm(searchParams.get("term"));
     } else {
-      setCategory("");
+      setSearchTerm("");
     }
   }, [search]);
 
   // Handler for searching products
   const handleSearch = useCallback(
-    async (searchTerm: string) => {
-      // if (searchTerm === "") return;
-      // const searchedResp: any = await searchProducts(searchTerm);
-      // console.log(searchedResp);
-      // setProducts(searchedResp.products);
-      // setPage(1);
-      // setTotalPages(searchedResp.totalPages);
-      navigate("/products/search?term=" + searchTerm);
+    async (searchTerm: string | null) => {
+      if (searchTerm === "") return;
+      const searchedResp: any = await searchProducts(searchTerm);
+      console.log(searchedResp);
+      setProducts(searchedResp.products);
+      setPage(1);
+      setTotalPages(searchedResp.totalPages);
     },
-    [navigate]
+    [searchProducts]
   );
 
   // Handler for sorting products
@@ -76,14 +74,6 @@ const ProductPage: React.FC = () => {
     [deleteProduct, setProducts, products]
   );
 
-  const onAddProduct = useCallback(
-    async (e: any) => {
-      e.preventDefault();
-      navigate("/products/add");
-    },
-    [navigate]
-  );
-
   const onLoadMoreCb = useCallback(
     async (e: any) => {
       e.preventDefault();
@@ -101,9 +91,17 @@ const ProductPage: React.FC = () => {
           <input
             type="text"
             placeholder="Search products..."
-            className="border border-gray-300 rounded px-2 py-1 mr-2 w-72"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            className="border border-gray-300 rounded px-2 py-1 mr-2 w-[500px]"
+            value={searchTerm || ""}
+            onChange={(e) => {
+              if (e.target.value) {
+                setSearchTerm(e.target.value);
+              } else {
+                setSearchTerm("");
+                setProducts(prodData?.products);
+                setTotalPages(prodData?.totalPages || 1);
+              }
+            }}
           />
           <button
             className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
@@ -131,14 +129,6 @@ const ProductPage: React.FC = () => {
               Sort
             </button>
           </div>
-          <div className="flex">
-            <button
-              className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 ml-2"
-              onClick={onAddProduct} // Call the sort handler
-            >
-              <i className="fa fa-plus" /> Add product
-            </button>
-          </div>
         </div>
       </div>
       {(products && products.length > 0) || loading ? (
@@ -151,82 +141,29 @@ const ProductPage: React.FC = () => {
                 </p>
               </div>
             )}
-            <div className="flex">
+          </div>
+          <SearchProductDisplayList
+            onDeleteCb={onDelete}
+            loading={loading}
+            products={products}
+          />
+
+          {prodData && page < totalPages ? (
+            <div className="flex justify-center items-center w-full">
               <button
-                onClick={() => navigate("/products/list")}
-                className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 ml-2"
+                onClick={onLoadMoreCb}
+                className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-3 mb-2"
               >
-                Go to categories
-              </button>
-              <button
-                onClick={() => navigate("/products/list?category=All Products")}
-                className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 ml-2"
-              >
-                View all products
+                {loading ? "loading..." : "View more"}
               </button>
             </div>
-          </div>
-          {category !== null ? (
-            <>
-              <ProductDisplayList
-                onDeleteCb={onDelete}
-                loading={loading}
-                products={products}
-                category={category}
-              />
-            </>
-          ) : (
-            <>
-              <ProductDisplayList
-                onDeleteCb={onDelete}
-                loading={loading}
-                products={products}
-                category="Electronics"
-              />
-              <ProductDisplayList
-                onDeleteCb={onDelete}
-                loading={loading}
-                products={products}
-                category="Mobiles"
-              />
-              <ProductDisplayList
-                onDeleteCb={onDelete}
-                loading={loading}
-                products={products}
-                category="Network"
-              />
-              <ProductDisplayList
-                onDeleteCb={onDelete}
-                loading={loading}
-                products={products}
-                category="cctv"
-              />
-              {prodData && page < totalPages ? (
-                <div className="flex justify-center items-center w-full">
-                  <button
-                    onClick={onLoadMoreCb}
-                    className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 mt-3 mb-2"
-                  >
-                    {loading ? "loading..." : "View more"}
-                  </button>
-                </div>
-              ) : null}
-            </>
-          )}
+          ) : null}
         </>
       ) : (
-        <div className="card flex justify-center flex-col align-center w-full">
-          <h1 className="text-2xl mt-2 mb-2">No Products Yet!</h1>
-          <button
-            onClick={onAddProduct}
-            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600"
-          >
-            Add new product
-          </button>
-        </div>
+        <div>No product found :D</div>
       )}
     </div>
   );
 };
 
-export default ProductPage;
+export default SearchProductsPage;

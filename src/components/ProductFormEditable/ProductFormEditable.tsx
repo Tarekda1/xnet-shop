@@ -15,6 +15,28 @@ const ProductFormEditable: React.FC<ProductFormProps> = ({
   productId,
 }) => {
   const { product, loading } = useGetProduct(productId);
+  const categoryDropdown = [
+    {
+      id: "electronics",
+      value: "Electronics",
+    },
+    {
+      id: "mobiles",
+      value: "Mobiles",
+    },
+    {
+      id: "networks",
+      value: "Network",
+    },
+    {
+      id: "gaming",
+      value: "Gaming",
+    },
+    {
+      id: "cctv",
+      value: "cctv",
+    },
+  ];
   return (
     <>
       <div className="flex flex-1 w-full">
@@ -100,11 +122,19 @@ const ProductFormEditable: React.FC<ProductFormProps> = ({
                   control={control}
                   defaultValue={product?.category}
                   render={({ field }) => (
-                    <input
-                      {...field}
-                      id="category"
+                    <select
                       className="border rounded w-full py-2 px-3"
-                    />
+                      id="category"
+                      {...field}
+                    >
+                      {categoryDropdown.map((category, index) => {
+                        return (
+                          <option value={category.value}>
+                            {category.value}
+                          </option>
+                        );
+                      })}
+                    </select>
                   )}
                 />
               </div>

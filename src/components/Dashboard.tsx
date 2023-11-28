@@ -7,6 +7,7 @@ import PieChart from "./PieChart/PieChart";
 import useAxios from "../hooks/useAxios";
 import { getToken } from "../utils/storageUtils";
 import { Product } from "../entities/Product";
+import TopinsertedProducts from "./TopInsertedProducts/TopinsertedProducts";
 ChartJS.register(...registerables);
 
 const Dashboard: FC = () => {
@@ -78,29 +79,15 @@ const Dashboard: FC = () => {
           <h3 className="font-bold">Total products</h3>
           <p>{productCountState.data?.totalProducts} items</p>
           <div className="flex justify-center">
-            <i className="@apply !text-[10rem] fa fa-gift "></i>
+            <i className="@apply !text-[10rem] fa fa-gift text-blue-200"></i>
           </div>
         </div>
         <div className="bg-white p-4 shadow-md">
           <h3 className="font-bold">Last 5 products added</h3>
-          {lastFiveProductsState.data?.map((product: Product) => {
-            return (
-              <li
-                className="list-none p-2 pl-0 flex flex-row w-full border-bottom-gray-200 border-b-[1px]"
-                key={product._id}
-              >
-                <img
-                  className="object-contain w-12 pr-2 "
-                  alt={product.name}
-                  src={product.image}
-                />{" "}
-                <p className="text-sm"> {product.name}</p>
-              </li>
-            );
-          })}
+          <TopinsertedProducts productsList={lastFiveProductsState.data} />
         </div>
         <div className="bg-white p-4 shadow-md">
-          <h3 className="font-bold">Total revenue in (USD)</h3>
+          <h3 className="font-bold">Total profit in (USD)</h3>
           <Bar data={data} title="" />
         </div>
         <div className="bg-white p-4 shadow-md">

@@ -9,14 +9,12 @@ interface ProductDisplayProps {
   products: Product[]; // Use an array of products
   loading?: boolean;
   onDeleteCb: (product: Product) => void;
-  category: string | null;
 }
 
-const ProductDisplayList: React.FC<ProductDisplayProps> = ({
+const SearchProductDisplayList: React.FC<ProductDisplayProps> = ({
   products,
   loading,
   onDeleteCb,
-  category,
 }) => {
   const navigate = useNavigate();
   const handleProductClick = useCallback(
@@ -26,42 +24,19 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
     [navigate]
   );
 
-  const productsFiltered = useMemo(() => {
-    if (category === "All Products") {
-      return products;
-    }
-    console.log(`category ${category}`);
-    if (category === undefined || category === null) {
-      return products;
-    }
-    if (products !== undefined && products.length > 0)
-      return products.filter((prod) => prod.category === category);
-    return [];
-  }, [category, products]);
-
-  const onViewAllClickCB = useCallback(
-    (event: any): void => {
-      navigate(`/products/list?category=${category}`);
-    },
-    [navigate, category]
-  );
-
   return (
     <>
       <div className="flex justify-between">
         <h3 className="bold text-3xl border-b-2 inline-block underline-offset-[3px]">
-          {category !== "" ? category : "All Products"}
+          Result found
         </h3>
-        <button className="btn text-blue-600" onClick={onViewAllClickCB}>
-          View all
-        </button>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-5 mt-4 transition-transform pb-10">
         {loading || products === undefined ? (
           <span>loading</span>
         ) : (
-          productsFiltered.map((product) => (
+          products.map((product) => (
             <div
               key={product._id}
               className="bg-white rounded-lg overflow-hidden 
@@ -104,4 +79,4 @@ const ProductDisplayList: React.FC<ProductDisplayProps> = ({
   );
 };
 
-export default ProductDisplayList;
+export default SearchProductDisplayList;

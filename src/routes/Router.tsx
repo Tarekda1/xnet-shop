@@ -15,6 +15,7 @@ import {
   SalesOrderPage,
   NewSalesOrderPage,
   RegisterPage,
+  SearchProductsPage,
 } from "./pages";
 import Page from "../components/Page/Page";
 // import { AuthProvider } from "../context/AuthenticationContext";
@@ -37,18 +38,23 @@ const Router = () => {
             </PrivateRoute>
           }
         />
-        <Route
-          path={routes.signup}
-          element={
-            <RegisterPage/>
-          }
-        />
+        <Route path={routes.signup} element={<RegisterPage />} />
         <Route
           path={routes.profile}
           element={
             <PrivateRoute>
               <Page>
                 <ProfilePage />
+              </Page>
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path={routes.searchProducts}
+          element={
+            <PrivateRoute>
+              <Page>
+                <SearchProductsPage />
               </Page>
             </PrivateRoute>
           }

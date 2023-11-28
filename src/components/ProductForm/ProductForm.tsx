@@ -1,9 +1,7 @@
 // src/components/ProductForm.tsx
 import React from "react";
 import { Controller } from "react-hook-form";
-import ImageUploadDrop from "../ImageUploadDropZone/ImageUploadDrop";
 import ImageUpload from "../ImageUpload/ImageUpload";
-import ImageUploadNewVersion from "../ImageUploadVersion2/ImageUploadNewVersion";
 
 interface ProductFormProps {
   control: any; // Replace with the appropriate type if possible
@@ -12,28 +10,49 @@ interface ProductFormProps {
   setValue: any;
 }
 
+const categoryDropdown = [
+  {
+    id: "electronics",
+    value: "Electronics",
+  },
+  {
+    id: "mobiles",
+    value: "Mobiles",
+  },
+  {
+    id: "networks",
+    value: "Network",
+  },
+  {
+    id: "gaming",
+    value: "Gaming",
+  },
+  {
+    id: "cctv",
+    value: "cctv",
+  },
+];
+
 const generateSerialNumber = (setValue: any) => {
-
-  'use strict';
-
-  var chars = '1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-
+  var chars = "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
     serialLength = 10,
-
     randomSerial = "",
-
     i,
-
     randomNumber;
 
   for (i = 0; i < serialLength; i = i + 1) {
     randomNumber = Math.floor(Math.random() * chars.length);
     randomSerial += chars.substring(randomNumber, randomNumber + 1);
   }
-  setValue("barcode",randomSerial);
-}
+  setValue("barcode", randomSerial);
+};
 
-const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, setValue }) => {
+const ProductForm: React.FC<ProductFormProps> = ({
+  control,
+  register,
+  errors,
+  setValue,
+}) => {
   return (
     <>
       <div className="grid grid-cols-2 gap-4 mb-2">
@@ -48,7 +67,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, se
             name="name"
             control={control}
             rules={{
-              required: true
+              required: true,
             }}
             defaultValue={""}
             render={({ field }) => (
@@ -74,7 +93,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, se
             control={control}
             defaultValue={""}
             rules={{
-              required: true
+              required: true,
             }}
             render={({ field }) => (
               <input
@@ -85,7 +104,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, se
               />
             )}
           />
-          <button onClick={() => generateSerialNumber(setValue)}>Generate Serial</button>
+          <button onClick={() => generateSerialNumber(setValue)}>
+            Generate Serial
+          </button>
           {errors.barcode && <p className="text-red-500">This is required.</p>}
         </div>
         <div className="mb-4">
@@ -101,7 +122,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, se
             defaultValue={0}
             rules={{
               required: true,
-              validate: (value) => value > 0
+              validate: (value) => value > 0,
             }}
             render={({ field }) => (
               <input
@@ -122,7 +143,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, se
             Image URL
           </label>
           {/* <input type="file" {...register("image")} /> */}
-          <ImageUpload register={register} Controller={Controller} control={control} errors={errors} setValue={setValue} />
+          <ImageUpload
+            register={register}
+            Controller={Controller}
+            control={control}
+            errors={errors}
+            setValue={setValue}
+          />
         </div>
         <div className="mb-4">
           <label
@@ -135,15 +162,26 @@ const ProductForm: React.FC<ProductFormProps> = ({ control, register, errors, se
             name="category"
             control={control}
             rules={{
-              required: true
+              required: true,
             }}
             defaultValue="Electronics"
             render={({ field }) => (
-              <input
-                {...field}
-                id="category"
+              <select
                 className="border rounded w-full py-2 px-3"
-              />
+                id="category"
+                {...field}
+              >
+                {categoryDropdown.map((category, index) => {
+                  return (
+                    <option value={category.value}>{category.value}</option>
+                  );
+                })}
+              </select>
+              // <input
+              //   {...field}
+              //   id="category"
+              //   className="border rounded w-full py-2 px-3"
+              // />
             )}
           />
           {errors.category && <p className="text-red-500">This is required.</p>}
