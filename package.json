@@ -41,7 +41,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "start:prod": "serve build --single -p 8080 &",
-    "prod": "npm run build && pm2 stop xnetshop && pm2 start ./server.js --name xnetshop",
+    "prod": "npm run build && pm2 stop all && pm2 start ./server.js --name xnetshop",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
